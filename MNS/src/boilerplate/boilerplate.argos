@@ -1,0 +1,441 @@
+<?xml version="1.0" ?>
+<argos-configuration>
+
+  <!-- ************************* -->
+  <!-- * General configuration * -->
+  <!-- ************************* -->
+  <framework>
+    <experiment length="0" ticks_per_second="25" random_seed="0"/>
+  </framework>
+  
+  <!-- *************** -->
+  <!-- * Controllers * -->
+  <!-- *************** -->
+  <controllers>
+    <lua_controller id="vehicle_controller">
+      <actuators>
+        <joints implementation="default">
+          <joint id="base_wheel_left" mode="velocity" max_impulse="0.005"/>
+          <joint id="base_wheel_right" mode="velocity" max_impulse="0.005"/>
+        </joints>
+        <radios implementation="default"/>
+        <tags implementation="default"/>
+      </actuators>
+      <sensors>
+        <joints implementation="default">
+          <joint id="base_wheel_left" mode="velocity"/>
+          <joint id="base_wheel_right" mode="velocity"/>
+        </joints>
+        <radios implementation="default" show_rays="false"/>
+        <proximity implementation="default" show_rays="true"/>
+      </sensors>
+      <params script="structure_vehicle.lua" />
+    </lua_controller>
+
+    <lua_controller id="quadcopter_controller">
+      <actuators>
+        <radios implementation="default"/>
+        <joints implementation="default">
+          <joint id="axis0_axis1" mode="velocity" max_impulse="0.111"/>
+          <joint id="axis1_axis2" mode="velocity" max_impulse="0.111"/>
+          <joint id="axis2_body" mode="velocity" max_impulse="0.011"/>
+        </joints>
+      </actuators>
+      <sensors>
+        <joints implementation="default">
+          <joint id="axis2_body" mode="position"/>
+        </joints>
+        <cameras implementation="default" show_frustum="false">
+          <camera id="fixed_camera" range="0.01:1.47" resolution="640,480"
+                  anchor="body" position="0,0,-0.01" orientation="0,0,180"
+                  focal_length="200,200" principal_point="320,240">
+            <led_detector medium="leds" show_rays="false"/>
+            <tag_detector medium="apriltags" show_rays="false"/>
+          </camera>
+        </cameras>
+        <radios implementation="default" show_rays="false"/>
+      </sensors>
+      <params script="structure_quadcopter.lua" />
+    </lua_controller>
+
+  </controllers>
+
+  <!-- ***************** -->
+  <!-- * Loop function * -->
+  <!-- ***************** -->
+  <loop_functions label="boilerplate_loop_functions" output="output.csv"/> 
+
+  <!-- *********************** -->
+  <!-- * Arena configuration * -->
+  <!-- *********************** -->
+  <arena size="27, 27, 15" center="0, 0, 0.125">
+    <box id="floor" size="27,27,0.01" movable="false" mass="10">
+      <body position="0,0,-0.010"  orientation="0,0,0" />
+	  <leds medium="leds">
+		<!-- eastern border -->		  
+		<led color="black" anchor="origin" offset="3,2.97,0.05"/>
+		<led color="black" anchor="origin" offset="3,2.75,0.05"/>
+		<led color="black" anchor="origin" offset="3,2.5,0.05"/>
+		<led color="black" anchor="origin" offset="3,2.25,0.05"/>
+		<led color="black" anchor="origin" offset="3,2,0.05"/>
+		<led color="black" anchor="origin" offset="3,1.75,0.05"/>
+		<led color="black" anchor="origin" offset="3,1.5,0.05"/>
+		<led color="black" anchor="origin" offset="3,1.25,0.05"/>
+		<led color="black" anchor="origin" offset="3,1,0.05"/>
+		<led color="black" anchor="origin" offset="3,0.75,0.05"/>
+		<led color="black" anchor="origin" offset="3,0.5,0.05"/>
+		<led color="black" anchor="origin" offset="3,0.25,0.05"/>
+		<led color="black" anchor="origin" offset="3,0,0.05"/>
+		<led color="black" anchor="origin" offset="3,-0.75,0.05"/>
+		<led color="black" anchor="origin" offset="3,-1.75,0.05"/>
+		<led color="black" anchor="origin" offset="3,-1.5,0.05"/>
+		<led color="black" anchor="origin" offset="3,-1.25,0.05"/>
+		<led color="black" anchor="origin" offset="3,-1,0.05"/>
+		<led color="black" anchor="origin" offset="3,-0.75,0.05"/>
+		<led color="black" anchor="origin" offset="3,-0.5,0.05"/>
+		<led color="black" anchor="origin" offset="3,-0.25,0.05"/>
+		<led color="black" anchor="origin" offset="3,-2,0.05"/>
+		<led color="black" anchor="origin" offset="3,-2.75,0.05"/>
+		<led color="black" anchor="origin" offset="3,-2.5,0.05"/>
+		<led color="black" anchor="origin" offset="3,-2.25,0.05"/>
+		<led color="black" anchor="origin" offset="3,-2.97,0.05"/>
+		  
+		<!-- western border -->
+		<led color="black" anchor="origin" offset="-3,-2.97,0.05"/>
+		<led color="black" anchor="origin" offset="-3,-2.75,0.05"/>
+		<led color="black" anchor="origin" offset="-3,-2.5,0.05"/>
+		<led color="black" anchor="origin" offset="-3,-2.25,0.05"/>
+		<led color="black" anchor="origin" offset="-3,-2,0.05"/>
+		<led color="black" anchor="origin" offset="-3,-1.75,0.05"/>
+		<led color="black" anchor="origin" offset="-3,-1.5,0.05"/>
+		<led color="black" anchor="origin" offset="-3,-1.25,0.05"/>
+		<led color="black" anchor="origin" offset="-3,-1,0.05"/>
+		<led color="black" anchor="origin" offset="-3,-0.75,0.05"/>
+		<led color="black" anchor="origin" offset="-3,-0.5,0.05"/>
+		<led color="black" anchor="origin" offset="-3,-0.25,0.05"/>
+		<led color="black" anchor="origin" offset="-3,0,0.05"/>
+		<led color="black" anchor="origin" offset="-3,0.75,0.05"/>
+		<led color="black" anchor="origin" offset="-3,1.75,0.05"/>
+		<led color="black" anchor="origin" offset="-3,1.5,0.05"/>
+		<led color="black" anchor="origin" offset="-3,1.25,0.05"/>
+		<led color="black" anchor="origin" offset="-3,1,0.05"/>
+		<led color="black" anchor="origin" offset="-3,0.75,0.05"/>
+		<led color="black" anchor="origin" offset="-3,0.5,0.05"/>
+		<led color="black" anchor="origin" offset="-3,0.25,0.05"/>
+		<led color="black" anchor="origin" offset="-3,2,0.05"/>
+		<led color="black" anchor="origin" offset="-3,2.75,0.05"/>
+		<led color="black" anchor="origin" offset="-3,2.5,0.05"/>
+		<led color="black" anchor="origin" offset="-3,2.25,0.05"/>
+		<led color="black" anchor="origin" offset="-3,2.97,0.05"/>
+
+		<!-- southern border -->		
+		<led color="black" anchor="origin" offset="-2.75,-3,0.05"/>
+		<led color="black" anchor="origin" offset="-2.5,-3,0.05"/>
+		<led color="black" anchor="origin" offset="-2.25,-3,0.05"/>
+		<led color="black" anchor="origin" offset="-2,-3,0.05"/>
+		<led color="black" anchor="origin" offset="-1.75,-3,0.05"/>
+		<led color="black" anchor="origin" offset="-1.5,-3,0.05"/>
+		<led color="black" anchor="origin" offset="-1.25,-3,0.05"/>
+		<led color="black" anchor="origin" offset="-1,-3,0.05"/>
+		<led color="black" anchor="origin" offset="-0.75,-3,0.05"/>
+		<led color="black" anchor="origin" offset="-0.5,-3,0.05"/>
+		<led color="black" anchor="origin" offset="-0.25,-3,0.05"/>
+		<led color="black" anchor="origin" offset="0,-3,0.05"/>
+		<led color="black" anchor="origin" offset="0.75,-3,0.05"/>
+		<led color="black" anchor="origin" offset="1.75,-3,0.05"/>
+		<led color="black" anchor="origin" offset="1.5,-3,0.05"/>
+		<led color="black" anchor="origin" offset="1.25,-3,0.05"/>
+		<led color="black" anchor="origin" offset="1,-3,0.05"/>
+		<led color="black" anchor="origin" offset="0.75,-3,0.05"/>
+		<led color="black" anchor="origin" offset="0.5,-3,0.05"/>
+		<led color="black" anchor="origin" offset="0.25,-3,0.05"/>
+		<led color="black" anchor="origin" offset="2,-3,0.05"/>
+		<led color="black" anchor="origin" offset="2.75,-3,0.05"/>
+		<led color="black" anchor="origin" offset="2.5,-3,0.05"/>
+		<led color="black" anchor="origin" offset="2.25,-3,0.05"/>
+		<led color="black" anchor="origin" offset="2.25,-3,0.05"/>
+
+		<!-- northern border -->		
+		<led color="black" anchor="origin" offset="-2.75,3,0.05"/>
+		<led color="black" anchor="origin" offset="-2.5,3,0.05"/>
+		<led color="black" anchor="origin" offset="-2.25,3,0.05"/>
+		<led color="black" anchor="origin" offset="-2,3,0.05"/>
+		<led color="black" anchor="origin" offset="-1.75,3,0.05"/>
+		<led color="black" anchor="origin" offset="-1.5,3,0.05"/>
+		<led color="black" anchor="origin" offset="-1.25,3,0.05"/>
+		<led color="black" anchor="origin" offset="-1,3,0.05"/>
+		<led color="black" anchor="origin" offset="-0.75,3,0.05"/>
+		<led color="black" anchor="origin" offset="-0.5,3,0.05"/>
+		<led color="black" anchor="origin" offset="-0.25,3,0.05"/>
+		<led color="black" anchor="origin" offset="0,3,0.05"/>
+		<led color="black" anchor="origin" offset="0.75,3,0.05"/>
+		<led color="black" anchor="origin" offset="1.75,3,0.05"/>
+		<led color="black" anchor="origin" offset="1.5,3,0.05"/>
+		<led color="black" anchor="origin" offset="1.25,3,0.05"/>
+		<led color="black" anchor="origin" offset="1,3,0.05"/>
+		<led color="black" anchor="origin" offset="0.75,3,0.05"/>
+		<led color="black" anchor="origin" offset="0.5,3,0.05"/>
+		<led color="black" anchor="origin" offset="0.25,3,0.05"/>
+		<led color="black" anchor="origin" offset="2,3,0.05"/>
+		<led color="black" anchor="origin" offset="2.75,3,0.05"/>
+		<led color="black" anchor="origin" offset="2.5,3,0.05"/>
+		<led color="black" anchor="origin" offset="2.25,3,0.05"/>
+		<led color="black" anchor="origin" offset="2.25,3,0.05"/>
+	
+		
+	  </leds>
+    </box>
+
+ <!-- adding a wall and LEDs to the eastern border to be detected by UAVs-->	  
+ <box id="bn" size="0.02,5.975,0.05" movable="false" mass="10">
+      <body position="3.2,0.0125,0"  orientation="0,0,0" />
+	  <leds medium="leds">
+		<!-- one white LED in the north-east corner to make the brain UAV aware of reaching a corner -->  
+		<led color="white" anchor="origin" offset="0,2.94,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,2.75,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,2.5,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,2.25,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,2,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,1.75,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,1.5,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,1.25,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,1,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,0.75,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,0.5,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,0.25,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,0,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,-0.75,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,-1.75,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,-1.5,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,-1.25,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,-1,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,-0.75,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,-0.5,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,-0.25,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,-2,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,-2.75,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,-2.5,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,-2.25,0.05"/>
+		<!-- one white LED in the south-east corner to make the brain UAV aware of reaching a corner -->  
+		<led color="white" anchor="origin" offset="0,-2.98,0.05"/>
+	  </leds>
+    </box>	  
+    <!-- adding a wall to the southern border-->	
+    <box id="be" size="5.975,0.02,0.05" movable="false" mass="10">
+      <body position="0.0125,-3.15,0"  orientation="0,0,0" />
+	  <leds medium="leds">
+		
+	  </leds>
+    </box>
+    <!-- adding a wall and LEDs to the western border to be detected by UAVs-->	  
+    <box id="bs" size="0.02,5.975,0.05" movable="false" mass="10">
+      <body position="-3.2,-0.0125,0"  orientation="0,0,0" />
+	  <leds medium="leds">
+		<!-- one white LED in the south-west corner to make the brain UAV aware of reaching a corner -->  
+		<led color="white" anchor="origin" offset="0,-2.93,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,-2.75,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,-2.5,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,-2.25,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,-2,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,-1.75,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,-1.5,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,-1.25,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,-1,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,-0.75,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,-0.5,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,-0.25,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,0,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,0.75,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,1.75,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,1.5,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,1.25,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,1,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,0.75,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,0.5,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,0.25,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,2,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,2.75,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,2.5,0.05"/>
+		<led color="yellow" anchor="origin" offset="0,2.25,0.05"/>
+		<!-- one white LED in the north-west corner to make the brain UAV aware of reaching a corner -->  
+		<led color="white" anchor="origin" offset="0,2.97,0.05"/>
+	  </leds>
+    </box>	  
+    <!-- adding a wall to the southern border-->
+    <box id="bw" size="5.975,0.02,0.05" movable="false" mass="10">
+      <body position="-0.0125,3.15,0"  orientation="0,0,0" />
+	  <leds medium="leds">	
+	  </leds>
+    </box>
+
+    <!-- an extra block without LED that has been placed outside the arena (this block is not used in the experiments) -->   
+    <prototype id="prototype" movable="true">
+      <links ref="base">
+        <link id="base" geometry="box" size="0.05,0.05,0.05" mass="1"/>
+      </links>
+      <body position="3.3,3.3,0" orientation="0,0,0"/>
+      <devices>
+      </devices>
+    </prototype>
+
+   <!-- blocks --> 	
+   <distribute>
+      <position method="uniform" min="-2.97,-2.97,0" max="2.97,2.97,0" />
+      <orientation method="uniform" min="0,0,0" max="360,0,0" />
+      <entity quantity="100" max_trials="100">
+       <prototype id="block" movable="true">
+         <body position="0,0,0" orientation="0,0,0" />
+         <links ref="base">
+           <link id="base" geometry="box" size="0.05,0.05,0.05" mass="0.1"/>
+         </links>
+         <devices>
+           <leds medium="leds">
+             <led offset="0,0,0.05" anchor="origin" color="black" />
+           </leds>
+         </devices>
+       </prototype> 
+      </entity>
+    </distribute>
+	
+	  
+    <!-- vehicles -->
+    <distribute>
+      <position method="uniform" min="-3.00,-3,0" max="-2.85,-1.8,0" />
+      <orientation method="uniform" min="0,0,0" max="360,0,0" />
+      <entity quantity="8" max_trials="100">
+        <prototype id="vehicle" movable="true">
+          <body position="0,0,0" orientation="0,0,0" />
+          <controller config="vehicle_controller"/>
+          <links ref="base">
+            <link id="base" geometry="cylinder" radius="0.025" height="0.02" mass="1"
+                  position="0,0,0.01" orientation="0,0,0" />
+            <link id="wheel_left" geometry="cylinder" radius="0.01" height=".005"
+                  mass=".05" position="0,.015,0.01" orientation="0,0,-90" />
+            <link id="wheel_right" geometry="cylinder" radius="0.01" height=".005"
+                  mass=".05" position="0,-.015,0.01" orientation="0,0,90" />
+            <link id="pivot_front" geometry="sphere" radius="0.01"
+                  mass=".05" position="0.015,0,0" orientation="0,0,0" />
+            <link id="pivot_back" geometry="sphere" radius="0.01"
+                  mass=".05" position="-0.015,0,0" orientation="0,0,0" />
+          </links>
+          <joints>
+            <joint id="base_wheel_right" type="revolute" axis="0,0,1">
+              <parent link="base" position="0,-.015,0" orientation="0,0,90"/>
+              <child link="wheel_right" position="0,0,0" orientation="0,0,0"/>
+            </joint>
+            <joint id="base_wheel_left" type="revolute" axis="0,0,1">
+              <parent link="base" position="0,.015,0" orientation="0,0,-90"/>
+              <child link="wheel_left" position="0,0,0" orientation="0,0,0"/>
+            </joint>
+            <joint id="base_pivot_front" type="spherical">
+              <parent link="base" position="0.015,0,0" orientation="0,0,0"/>
+              <child link="pivot_front" position="0,0,0.01" orientation="0,0,0"/>
+            </joint>
+            <joint id="base_pivot_back" type="spherical">
+              <parent link="base" position="-0.015,0,0" orientation="0,0,0"/>
+              <child link="pivot_back" position="0,0,0.01" orientation="0,0,0"/>
+            </joint>
+          </joints>
+          <devices>
+            <radios medium="zigbee">
+              <radio anchor="base" position="0,0,0.02" range="3"/>
+            </radios>
+            <tags medium="apriltags">
+              <tag anchor="base" observable_angle="75" side_length="0.02"
+                   position="0.000,0.000,0.021" orientation="0,0,0"/>
+            </tags>
+            <proximity_sensors>
+              <sensor anchor="base" offset="0.026,0.000,0.01" direction="1.000,0.000,0" range="0.03" />
+              <sensor anchor="base" offset="0.022,0.013,0.01" direction="0.866,0.500,0" range="0.03" />
+              <sensor anchor="base" offset="0.013,0.022,0.01" direction="0.500,0.866,0" range="0.03" />
+              <sensor anchor="base" offset="0.000,0.026,0.01" direction="0.000,1.000,0" range="0.03" />
+              <sensor anchor="base" offset="-0.013,0.022,0.01" direction="-0.500,0.866,0" range="0.03" />
+              <sensor anchor="base" offset="-0.022,0.013,0.01" direction="-0.866,0.500,0" range="0.03" />
+              <sensor anchor="base" offset="-0.026,0.000,0.01" direction="-1.000,0.000,0" range="0.03" />
+              <sensor anchor="base" offset="-0.022,-0.013,0.01" direction="-0.866,-0.500,0" range="0.03" />
+              <sensor anchor="base" offset="-0.013,-0.022,0.01" direction="-0.500,-0.866,0" range="0.03" />
+              <sensor anchor="base" offset="0.000,-0.026,0.01" direction="0.000,-1.000,0" range="0.03" />
+              <sensor anchor="base" offset="0.013,-0.022,0.01" direction="0.500,-0.866,0" range="0.03" />
+              <sensor anchor="base" offset="0.022,-0.013,0.01" direction="0.866,-0.500,0" range="0.03" />
+            </proximity_sensors>
+          </devices>
+        </prototype> 
+      </entity>
+    </distribute>
+
+    <!-- quadcopters -->
+    <prototype id="quadcopter0" movable="false">
+      <body position="-3.00,-2.5,1.5" orientation="0,0,0" />
+      <controller config="quadcopter_controller"/>
+      <links ref="axis0">
+        <link id="axis0" geometry="sphere" radius="0" mass="0.001"
+              position="0,0,0" orientation="0,0,0" />
+        <link id="axis1" geometry="sphere" radius="0" mass="0.001"
+              position="0,0,0" orientation="0,0,0" />
+        <link id="axis2" geometry="sphere" radius="0" mass="0.001"
+              position="0,0,0" orientation="0,0,0" />
+        <link id="body" geometry="cylinder" radius="0.025" height="0.01" mass="1"
+              position="0,0,0" orientation="0,0,0" />
+      </links>
+      <joints>
+        <joint id="axis0_axis1" type="prismatic" axis="1,0,0" limit="-200.95:100.95">
+          <parent link="axis0" position="0,0,0" orientation="0,0,0"/>
+          <child link="axis1" position="0,0,0" orientation="0,0,0"/>
+        </joint>
+        <joint id="axis1_axis2" type="prismatic" axis="0,1,0" limit="-100.95:100.95">
+          <parent link="axis1" position="0,0,0" orientation="0,0,0"/>
+          <child link="axis2" position="0,0,0" orientation="0,0,0"/>
+        </joint>
+        <joint id="axis2_body" type="revolute" axis="0,0,1">
+          <parent link="axis2" position="0,0,0" orientation="0,0,0"/>
+          <child link="body" position="0,0,0" orientation="0,0,0"/>
+        </joint>
+      </joints>
+      <devices>
+        <radios medium="zigbee">
+          <radio anchor="body" position="0,0,0" range="3"/>
+        </radios>
+      </devices>
+    </prototype>
+
+  </arena>
+	
+  <!-- ******************* -->
+  <!-- * Physics engines * -->
+  <!-- ******************* -->
+  <physics_engines>
+    <dynamics3d id="dyn3d" iterations="3">    
+      <gravity g="9.8" />
+    </dynamics3d>
+  </physics_engines>
+
+  <!-- ********* -->
+  <!-- * Media * -->
+  <!-- ********* -->
+  <media>
+    <tag id="apriltags" index="grid" grid_size="20,20,20" />
+    <led id="leds" index="grid" grid_size="20,20,20" />
+    <radio id="zigbee" index="grid" grid_size="2,2,2" />
+  </media>
+	
+  <!-- ****************** -->
+  <!-- * Visualization * -->
+  <!-- ****************** -->
+  <visualization>
+    <qt-opengl lua_editor="true">
+      <camera>
+        <placement idx="0" position=" 0,  -2.5,1" look_at="0,0,0.05" lens_focal_length="78" />
+        <placement idx="1" position=" 2.5,-2.5,1" look_at="0,0,0.05" lens_focal_length="92" />
+        <placement idx="2" position=" 2.5, 0,  1" look_at="0,0,0.05" lens_focal_length="78" />
+        <placement idx="3" position=" 2.5, 2.5,1" look_at="0,0,0.05" lens_focal_length="92" />
+        <placement idx="4" position=" 0,   2.5,1" look_at="0,0,0.05" lens_focal_length="78" />
+        <placement idx="5" position="-2.5, 2.5,1" look_at="0,0,0.05" lens_focal_length="92" />
+        <placement idx="6" position="-2.5, 0,  1" look_at="0,0,0.05" lens_focal_length="78" />
+        <placement idx="7" position="-2.5,-2.5,1" look_at="0,0,0.05" lens_focal_length="92" />
+        <placement idx="8" position="0,0,3.0" look_at="0.0,0.0,0.125" up="0,1,0" lens_focal_length="40" />
+        <placement idx="9" position="-0.5,0,2.5" look_at="-0.5,0.0,0.125" up="0,1,0" lens_focal_length="40" />
+      </camera>
+    </qt-opengl>
+  </visualization>
+
+</argos-configuration>

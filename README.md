@@ -90,10 +90,10 @@ To compile and install this version of ARGoS:
 	make
 	sudo make install
 
-After making sure that the correct version has been installed, compile and install the project:
+After making sure that the correct version has been installed, compile and install the project.
 
-1. In the main directory of the project (i.e., the directory that contains the "src" directory), 
-   make a "build" directory, then compile and install the project:
+In the main directory of the project (i.e., the directory that contains the "src" directory), 
+make a "build" directory, then compile and install the project:
 
 	cd "project name"
 	mkdir build
@@ -102,7 +102,7 @@ After making sure that the correct version has been installed, compile and insta
 	make
 	sudo make install
 
-2. To run the project, go to the src/boilerplate/ directory and run ARGoS:
+To run the project, go to the src/boilerplate/ directory and run ARGoS:
 
 	cd ../src/boilerplate
 	argos3 -c boilerplate.argos

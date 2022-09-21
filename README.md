@@ -30,7 +30,7 @@ The default setups for each project contains 100 objects and 8 ground robots. In
 4. In the HIER apporach, to change the topology or formation shape used by the robots, modify the structure_quadcopter.lua according to the comments.
 
 
-## Output of experiment
+## Outputs of experiments
 
 For the HIER and STIG approaches, there is one output file per each experiment: output.csv, recorded in src/boilerplate/experiments/ directory. For the MEAN and VOTE approaches, results for both approaches are collected simultaneously for each experiment and there is one output file per robot: output files are named by the robot's ID, e.g., for the robot with ID 5, the output file is info_V5.csv and it contains the results of both MEAN and VOTE approaches for that robot, recorded in src/boilerplate/Robots-Memories/Results/ directory. 
 
@@ -92,7 +92,7 @@ To compile and install this version of ARGoS:
 
 After making sure that the correct version has been installed, compile and install the project.
 
-In the main directory of the project (i.e., the directory that contains the "src" directory), 
+In the main directory of the approach project (i.e., the directory that contains the "src" directory), 
 make a "build" directory, then compile and install the project:
 
 	cd "project name"

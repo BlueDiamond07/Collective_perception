@@ -1,6 +1,13 @@
 # Reducing uncertainty in collective perception using self-organized hierarchy
 
-This repository contains the Lua controllers and loop functions of four approaches to collective perception (HIER, STIG, MEAN, VOTE) which have been implemented in the ARGoS simulator (https://github.com/ilpincy/argos3).
+This repository contains the Lua controllers and loop functions of approaches to collective perception which have been implemented in the ARGoS simulator (https://github.com/ilpincy/argos3).
+
+There are four approaches (please see the associated paper for details):
+
+- HIER approach (MNS directory) 
+- STIG approach (Pheromone directory)
+- MEAN approach (Voter-Mean directory)
+- VOTE approach (Voter-Mean directory)
 
 ## Configuring and running experiments
 

@@ -66,7 +66,7 @@ All `.csv` are tab delimited. The columns of each `.csv` are as follows:
 - *(not used in the paper)* mean of all previous values of column 3 (i.e., opinions from every time step, using the MEAN approach)
 - *(not used in the paper)* mean of all previous values of column 4 (i.e., opinions from every time step, using the VOTE approach)
 
-In the output file of (only) the robot with the highest ID, in addition to the columns mentioned above, there are the following columns:
+In the output file of (only) the robot with the highest ID, there are additional columns:
 
 - mean of all previous values of column 3 from all `.csv` from this experiment (i.e., opinions of all robots from every time step, using the MEAN approach)
 - mean of all previous values of column 4 from all `.csv` from this experiment (i.e., opinions of all robots from every time step, using the VOTE approach)

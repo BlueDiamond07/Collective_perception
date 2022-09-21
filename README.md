@@ -15,7 +15,7 @@ The default setups for each project contains 100 objects and 8 ground robots. In
    200 objects, we should set the quantity of objects to 200 in `boilderplate.argos`:
 
    - In order to change the number of objects that should be placed in the environment, the parameter "quantity"
-     in the block of code associated with the object prototype in the `boilerplate.argos` should be changed 
+     in the block of code associated with the object prototype in `boilerplate.argos` should be changed 
      (e.g., line 285 in `MNS/src/boilerplate/boilerplate.argos`, line 202 in `Pheromone/src/boilerplate/boilerplate.argos`).
 
    - The output files have been defined under the output attribute of the loop function node in `boilerplate.argos` (e.g., line 66 of 
@@ -39,7 +39,7 @@ The default setups for each project contains 100 objects and 8 ground robots. In
 
 For the HIER and STIG approaches, there is one output file per each experiment: output.csv, recorded in `src/boilerplate/experiments/`. For the MEAN and VOTE approaches, results for both approaches are collected simultaneously for each experiment and there is one output file per robot: output files are named by the robot's ID, e.g., for the robot with ID 5, the output file is `info_V5.csv` and it contains the results of both MEAN and VOTE approaches for that robot, recorded in `src/boilerplate/Robots-Memories/Results/`. 
 
-All CSVs are tab delimited. The columns of each CSV are as follows:
+All `.csv` are tab delimited. The columns of each `.csv` are as follows:
 
 ### HIER approach
 
@@ -68,10 +68,10 @@ All CSVs are tab delimited. The columns of each CSV are as follows:
 
 In the output file of (only) the robot with the highest ID, in addition to the columns mentioned above, there are the following columns:
 
-- mean of all previous values of column 3 from all CSVs from this experiment (i.e., opinions of all robots from every time step, using the MEAN approach)
-- mean of all previous values of column 4 from all CSVs from this experiment (i.e., opinions of all robots from every time step, using the VOTE approach)
-- *(not used in the paper)* mean of all previous values of column 5 from all CSVs from this experiment
-- *(not used in the paper)* mean of all previous values of column 6 from all CSVs from this experiment
+- mean of all previous values of column 3 from all `.csv` from this experiment (i.e., opinions of all robots from every time step, using the MEAN approach)
+- mean of all previous values of column 4 from all `.csv` from this experiment (i.e., opinions of all robots from every time step, using the VOTE approach)
+- *(not used in the paper)* mean of all previous values of column 5 from all `.csv` from this experiment
+- *(not used in the paper)* mean of all previous values of column 6 from all `.csv` from this experiment
 
 
 

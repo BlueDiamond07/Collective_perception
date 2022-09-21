@@ -6,7 +6,7 @@ This repository contains the Lua controllers and loop functions of four approach
 
 The default setups for each project contains 100 objects and 8 ground robots. In order to run an approach with a set of objects, please follow the steps below:
  
-1- The number of the objects should be specified in src/boilerplate/boilderplate.argos. For example, if we want to distribute 
+1. The number of the objects should be specified in src/boilerplate/boilderplate.argos. For example, if we want to distribute 
    200 objects, we should set the   quantity of objects to 200 in the boilderplate.argos:
 
    - In order to change the number of objects that should be placed in the environment, the parameter "quantity"
@@ -16,10 +16,10 @@ The default setups for each project contains 100 objects and 8 ground robots. In
    - The output files have been defined under the output attribute of the loop function node in boilerplate.argos (e.g., line 66 of 
      MNS/src/boilerplate/boilerplate.argos).
 
-2- To design a new setup based on a new project, change the environmental properties, the robot and UAV prototypes, the arena, the 
+2. To design a new setup based on a new project, change the environmental properties, the robot and UAV prototypes, the arena, the 
    number of robots, etc, in the boilerplate.argos file.
 
-3- After modifying the boilerplate.argos file, the following parameter of the loop funtion of the project (boilerplate_loop_functions.cpp), 
+3. After modifying the boilerplate.argos file, the following parameter of the loop funtion of the project (boilerplate_loop_functions.cpp), 
    which is located in the src/boilerplate/ directory, should also be edited accordingly:
 
    - Nb_robots: the number of robots used in the experiment
@@ -27,7 +27,7 @@ The default setups for each project contains 100 objects and 8 ground robots. In
 
    Additionally, for the STIG approach, the number of robots should be modified in Pheromone/src/boilerplate/structrue_quadcopter.lua (see line 59).
 
-4- In the HIER apporach, to change the topology or formation shape used by the robots, modify the structure_quadcopter.lua according to the comments.
+4. In the HIER apporach, to change the topology or formation shape used by the robots, modify the structure_quadcopter.lua according to the comments.
 
 
 ## Output of experiment
@@ -92,7 +92,7 @@ To compile and install this version of ARGoS:
 
 After making sure that the correct version has been installed, compile and install the project:
 
-1- In the main directory of the project (i.e., the directory that contains the "src" directory), 
+1. In the main directory of the project (i.e., the directory that contains the "src" directory), 
    make a "build" directory, then compile and install the project:
 
 	cd "project name"
@@ -102,7 +102,7 @@ After making sure that the correct version has been installed, compile and insta
 	make
 	sudo make install
 
-2- To run the project, go to the src/boilerplate/ directory and run ARGoS:
+2. To run the project, go to the src/boilerplate/ directory and run ARGoS:
 
 	cd ../src/boilerplate
 	argos3 -c boilerplate.argos

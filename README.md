@@ -1,6 +1,6 @@
 # Reducing uncertainty in collective perception using self-organized hierarchy
 
-This repository contains the Lua controllers and loop functions of approaches to collective perception which have been implemented in the ARGoS simulator (https://github.com/ilpincy/argos3).
+This repository covers four approaches to collective perception as well as the experiments to test them, implemented in the ARGoS simulator (https://github.com/ilpincy/argos3).
 
 There are four approaches (please see the associated paper for details):
 
@@ -11,7 +11,7 @@ There are four approaches (please see the associated paper for details):
 
 ## Configuring and running experiments
 
-The default setups for each project contains 100 objects and 8 ground robots. In order to run an approach with a set of objects, please follow the steps below:
+The default setups for each project contains 100 objects and 8 ground robots. In order to configure an experiment, please follow the steps below:
  
 1. The number of the objects should be specified in src/boilerplate/boilderplate.argos. For example, if we want to distribute 
    200 objects, we should set the   quantity of objects to 200 in the boilderplate.argos:

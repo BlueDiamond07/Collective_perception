@@ -52,7 +52,7 @@ All `.csv` are tab delimited. The columns of each `.csv` are as follows:
 
 ### STIG approach
 
-- *(not used in the paper)* the number of objects counted at each time step (within the long range radius $\rho2$) divided by the size of the robot's field of view **(one column per robot)**
+- *(not used in the paper)* estimate at the current time step **(one column per robot)**
 - opinion at the current time step **(one column per robot)**
 - mean of the row of entries from the 2nd group of columns (i.e., opinions of all robots at the current time step)
 - time step

@@ -54,7 +54,7 @@ All `.csv` are tab delimited. The columns of each `.csv` are as follows:
 
 - *(not used in the paper)* estimate at the current time step **(one column per robot)**
 - opinion at the current time step, $\lambda^{\text{app}}$ **(one column per robot)**
-- mean of the row of entries from the 2nd group of columns,$\overline{\lambda^{\text{app}}}$ (i.e., opinions of all robots at the current time step)
+- mean of the row of entries from the 2nd group of columns, $\overline{\lambda^{\text{app}}}$ (i.e., opinions of all robots at the current time step)
 - time step
 
 ### MEAN and VOTE approaches

@@ -44,8 +44,8 @@ All `.csv` are tab delimited. The columns of each `.csv` are as follows:
 ### HIER approach
 
 - time step
-- objects (i.e., number of objects counted by robot *r* from the beginning of the experiment)
-- opinion at the current time step, where parameter ${k}_t^{max}$ = 1000
+- objects, $\sigma$ (i.e., number of objects counted by robot *r* from the beginning of the experiment)
+- opinion at the current time step, $\lambda^{\text{app}}$, where parameter ${k}_t^{max}$ = 1000
 - *(not used in the paper)* opinion at the current time step, where parameter ${k}_t^{max}$ = 1200
 - *(not used in the paper)* opinion at the current time step, where parameter ${k}_t^{max}$ = 1500
 - *(not used in the paper)* mean of all previous values of column 3 (i.e., opinions from every time step, where parameter ${k}_t^{max}$ = 1000)
@@ -53,23 +53,23 @@ All `.csv` are tab delimited. The columns of each `.csv` are as follows:
 ### STIG approach
 
 - *(not used in the paper)* estimate at the current time step **(one column per robot)**
-- opinion at the current time step **(one column per robot)**
-- mean of the row of entries from the 2nd group of columns (i.e., opinions of all robots at the current time step)
+- opinion at the current time step, $\lambda^{\text{app}}$ **(one column per robot)**
+- mean of the row of entries from the 2nd group of columns,$\bar{\lambda^{\text{app}}}$ (i.e., opinions of all robots at the current time step)
 - time step
 
 ### MEAN and VOTE approaches
 
 - time step
-- objects (i.e., number of objects counted by robot *r* from the beginning of the experiment)
-- opinion at the current time step, using the MEAN approach
-- opinion at the current time step, using the VOTE approach
+- objects, $\sigma$ (i.e., number of objects counted by robot *r* from the beginning of the experiment)
+- opinion at the current time step, $\lambda^{\text{app}}$, using the MEAN approach
+- opinion at the current time step, $\lambda^{\text{app}}$, using the VOTE approach
 - *(not used in the paper)* mean of all previous values of column 3 (i.e., opinions from every time step, using the MEAN approach)
 - *(not used in the paper)* mean of all previous values of column 4 (i.e., opinions from every time step, using the VOTE approach)
 
 In the output file of (only) the robot with the highest ID, there are additional columns:
 
-- mean of all previous values of column 3 from all `.csv` from this experiment (i.e., opinions of all robots from every time step, using the MEAN approach)
-- mean of all previous values of column 4 from all `.csv` from this experiment (i.e., opinions of all robots from every time step, using the VOTE approach)
+- mean of all previous values of column 3 from all `.csv` from this experiment, $\bar{\lambda^{\text{app}}}$, (i.e., opinions of all robots from every time step, using the MEAN approach)
+- mean of all previous values of column 4 from all `.csv` from this experiment, $\bar{\lambda^{\text{app}}}$, (i.e., opinions of all robots from every time step, using the VOTE approach)
 - *(not used in the paper)* mean of all previous values of column 5 from all `.csv` from this experiment
 - *(not used in the paper)* mean of all previous values of column 6 from all `.csv` from this experiment
 

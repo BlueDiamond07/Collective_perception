@@ -1,6 +1,8 @@
 # Reducing uncertainty in collective perception using self-organized hierarchy
 
-This repository contains the lua controllers and loop functions for investigating collective perception in [ARGoS](https://github.com/ilpincy/argos3), using the following approaches (please see the [associated pre-print](https://iridia.ulb.ac.be/IridiaTrSeries/link/IridiaTr2022-011.pdf) for details):
+This repository accompanies an article submission; details forthcoming.
+
+This repository contains the lua controllers and loop functions for investigating collective perception in [ARGoS](https://github.com/ilpincy/argos3), using the following approaches:
 
 - **HIER** approach (MNS directory) 
 - **STIG** approach (Pheromone directory)

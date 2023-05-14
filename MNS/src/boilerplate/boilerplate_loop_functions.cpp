@@ -29,7 +29,7 @@ namespace argos {
       const int Nb_robots = 8; // number of robots
       const int Nb_blocks = 100; // number of blocks
       float RobotCollision[Nb_robots][2]; // robots' postion (x and y coordinates) is stored in this array: for 8 ground robots
-      int evapolation[Nb_blocks+1] = {};
+      int evaporation[Nb_blocks+1] = {};
       float poses[Nb_blocks+20][2];	
       int boxCounter = 0; // for counting the number of observed blocks
       int outFlag = 0; // for dynamic setup
@@ -39,7 +39,7 @@ namespace argos {
       double opinion_1500[50500]; // an array to store the opinion corresponding to the past 1500 steps at each step
       double opinion_1000[50500]; // an array to store the opinion corresponding to the past 1000 steps at each step
       double opinion_1200[50500]; // an array to store the opinion corresponding to the past 1200 steps at each step
-	
+      const float View_width = Nb_robots/8.0; // length of the formation in meter
    /****************************************/
    /****************************************/
 
@@ -77,8 +77,6 @@ namespace argos {
     	dst << src.rdbuf();
 	m_strOutFile = str + "/" + m_strOutFile;
    	std::cout << str << std::endl;
-	LOG << "File: " << str << std::endl;
-	LOG << "tree" << m_strOutFile << std::endl;
   	/* Open the file for text writing */
    	m_cOutFile.open(m_strOutFile.c_str(), std::ofstream::out | std::ofstream::trunc);
   	if(m_cOutFile.fail()) {
@@ -106,7 +104,13 @@ namespace argos {
    /****************************************/
 
    void CBoilerplateLoopFunctions::PostStep() {
-	
+
+	std::ifstream infile5("border_value.csv"); // during the time that MNS is shifting along a boundary, value 1 is written in border_value.csv by brain; otherwise value 0 is written
+	float border; // used to read the value recorded in the border_value.csv
+	infile5 >> border;
+	std::ifstream infile6("end_round.csv"); // when MNS finishes a complete sweep of the environment (i.e., a sweep round) value 1 is written in this file
+	float begin_of_newRound; // used to read the value recorded in the end_round.csv
+	infile6 >> begin_of_newRound;
 	int c=0; // a counter for all the objects in the environment (blocks, ground robots, and UAVs)
 	simcount = simcount + 1; // simulation step is increased by one
 		
@@ -188,9 +192,12 @@ namespace argos {
 			
 		//******************************************************************
 		/* checks if a robot is close enough to an obstacle for the respective robot to see the respective obstacle */
-		if (cFB->HasComponent("leds.led[led_0]")){ //if the object is a block			
-			if (evapolation[c] > 0){	
-				evapolation[c] = evapolation[c] - 1;
+		if (cFB->HasComponent("leds.led[led_0]")){ // if the object is a block	
+			if (begin_of_newRound == 1){ // at the end of a sweep round in order to set the obstacles to "off" the corresponding evaporation counter of each obstacle is set to 0 
+				evaporation[c] = 0;
+			}		
+			if (evaporation[c] > 0){ // at each step, if the evaporation counter is bigger than 0, it decreases by 1	
+				evaporation[c] = evaporation[c] - 1;
 			}
 			
 			CLEDEntity& cLed = cFB->GetComponent<CLEDEntity>("leds.led[led_0]");
@@ -219,12 +226,12 @@ namespace argos {
 						when distance between a ground robot and a block is less than 0.084 m and the block 
 						is located between the leftmost and rightmost ground robots in the formation, the block
 						is activated for 300 steps and couted by the MNS*/
-						if ((simcount<2500 or (simcount>25100 and simcount<29200) or OutofView == 0) and distance < 0.084 and distance > 0 and cLed.GetColor() != CColor::PURPLE and cLed.GetColor() != CColor::BLUE and simcount>320){  // observable distance is : the center of the obstacle is less than 0.084 meters from the center of the robot
+						if (border == 0 and (simcount<2500 or (simcount>25500 and simcount<29700) or OutofView == 0) and distance < 0.084 and distance > 0 and cLed.GetColor() != CColor::PURPLE and cLed.GetColor() != CColor::BLUE and simcount>320){  // observable distance is : the center of the obstacle is less than 0.084 meters from the center of the robot
 							cLed.SetColor(CColor::BLUE);
 							if (simcount>320){
 								++boxCounter; // for counting the number of observed blocks
 							}
-							evapolation[c] = 300; //when an obstacle is activated by a ground robot, it is set to "on" for 300 steps
+							evaporation[c] = 300; //when an obstacle is activated by a ground robot, it is set to "on" for 300 steps
 							colorFlag = 1;
 							break;
 						}
@@ -240,7 +247,7 @@ namespace argos {
 					cLed.SetColor(CColor::BLACK);
 				}
 			}
-			if (cLed.GetColor() != CColor::WHITE and colorFlag == 0 and evapolation[c] == 0 and cLed.GetColor() != CColor::PURPLE and cLed.GetColor() != CColor::BLACK){
+			if (cLed.GetColor() != CColor::WHITE and colorFlag == 0 and evaporation[c] == 0 and cLed.GetColor() != CColor::PURPLE and cLed.GetColor() != CColor::BLACK){
 				cLed.SetColor(CColor::BLACK); //set the obstacle to "off" when its corresponding evaporation counter becomes 0
 			}
 			
@@ -251,8 +258,8 @@ namespace argos {
 			RobotCollision[c-(Nb_blocks+2)][0] = cFB->GetEmbodiedEntity().GetOriginAnchor().Position[0]; // the ground robot's x coordinate
 			RobotCollision[c-(Nb_blocks+2)][1] = cFB->GetEmbodiedEntity().GetOriginAnchor().Position[1]; // the ground robot's y coordinate
 			
-                        /* Lines 256 to 314 simulates ground robots reaction to the arena boundary if the MNS passes a boundary by 1 meter*/
-			/*As the MNS never goes out of the boundaries in this project, lines 256 to 314 are useless can be removed*/
+                        /* Lines 263 to 321 simulates ground robots reaction to the arena boundary if the MNS passes a boundary by 1 meter*/
+			/*As the MNS never goes out of the boundaries in this project, lines 263 to 321 are useless can be removed*/
 			argos::CQuaternion orient = cFB->GetEmbodiedEntity().GetOriginAnchor().Orientation;
 			CRadians zAngle, yAngle, xAngle;
 			cFB->GetEmbodiedEntity().GetOriginAnchor().Orientation.ToEulerAngles(zAngle, yAngle, xAngle);
@@ -337,57 +344,43 @@ namespace argos {
 	//******************************************************************
 	///////////// Calculating opinion, based on block counted 
 	//******************************************************************
-	std::ifstream infile5("density_value.csv"); // during the time that MNS is next to a boundary, value 1 is written in density_value.csv by brain; otherwise value 0 is written
-	float fi5;
-
 	ListOfBlocksCounted[simcount-1] = boxCounter; // the total numbr of blocks observed from the beginning of the run
 
 	int NumberOfBlocks_MovingWindow_1500 = 0; // to count the number of blocks observed during the past 1500 steps
 	int NumberOfBlocks_MovingWindow_1000 = 0; // to count the number of blocks observed during the past 1000 steps
 	int NumberOfBlocks_MovingWindow_1200 = 0; // to count the number of blocks observed during the past 1200 steps
 
-	infile5 >> fi5;
-	double Sum_of_width_1000 = 0; // the total width of observation area during the past 1000 steps
-	double Sum_of_width_1200 = 0; // the total width of observation area during the past 1000 steps
-	double Sum_of_width_1500 = 0; // the total width of observation area during the past 1000 steps
-	if (simcount > 1000 &&  fi5== 1){
-		ListOfWidth[simcount-1] = 0.25; // when MNS reaches a boundary, it shifts to left or right to sweep a neighboring lane; in such a case its width is equal to 0.25 m
-	}
-	else{
-		ListOfWidth[simcount-1] = 1; // when MNS moves forward or backward its width is equal to 1 m
+	/* when the time step is greater than 1000 and the MNS is shifting (i.e., border equals 1), the elements of the ListOfBlocksCounted array
+	corresponding to the latest 1000 steps are shifted one position to the right. By using this process, the opinion generated at the step before
+	starting the shift process is preserved and regenerated at each step of the shift.*/
+	if (simcount > 1000 &&  border== 1){
+		for (int i = simcount; i>=simcount-1000; i--){
+			ListOfBlocksCounted[i-1] = ListOfBlocksCounted[i-2];
+		}
 	}
 	if (simcount > 1320){ // for steps greater than 1000
-		for (int k = (simcount-1); k>(simcount-1001); k--){ // the summation of width of observation area during the past 1000 steps
-			Sum_of_width_1000 = Sum_of_width_1000 + ListOfWidth[k];
-		}
 		NumberOfBlocks_MovingWindow_1000 = ListOfBlocksCounted[simcount-1] - ListOfBlocksCounted[simcount-1001]; // the number of blocks observed during the past 1000 steps
-		opinion_1000[simcount-1] = NumberOfBlocks_MovingWindow_1000/(Sum_of_width_1000*0.002985); // the opinion corresponding to the past 1000 steps
+		opinion_1000[simcount-1] = NumberOfBlocks_MovingWindow_1000/(1000*0.002985*View_width); // the opinion corresponding to the past 1000 steps
 	}
 	if (simcount > 1520){ // for steps greater than 1200
-		for (int k = (simcount-1); k>(simcount-1201); k--){ // the summation of width of observation area during the past 1200 steps
-			Sum_of_width_1200 = Sum_of_width_1200 + ListOfWidth[k];
-		}
 		NumberOfBlocks_MovingWindow_1200 = ListOfBlocksCounted[simcount-1] - ListOfBlocksCounted[simcount-1201]; // the number of blocks observed during the past 1200 steps
-		opinion_1200[simcount-1] = NumberOfBlocks_MovingWindow_1200/(Sum_of_width_1200*0.002985); // the opinion corresponding to the past 1200 steps 
+		opinion_1200[simcount-1] = NumberOfBlocks_MovingWindow_1200/(1200*0.002985*View_width); // the opinion corresponding to the past 1200 steps 
 	}
 	if (simcount > 1820){ // for steps greater than 1500
-		for (int k = (simcount-1); k>(simcount-1501); k--){ // the summation of width of observation area during the past 1500 steps
-			Sum_of_width_1500 = Sum_of_width_1500 + ListOfWidth[k];
-		}
 		NumberOfBlocks_MovingWindow_1500 = ListOfBlocksCounted[simcount-1] - ListOfBlocksCounted[simcount-1501]; // the number of blocks observed during the past 1500 steps
-		opinion_1500[simcount-1] = NumberOfBlocks_MovingWindow_1500/(Sum_of_width_1500*0.002985); // the opinion corresponding to the past 1500 steps
+		opinion_1500[simcount-1] = NumberOfBlocks_MovingWindow_1500/(1500*0.002985*View_width); // the opinion corresponding to the past 1500 steps
 	}
 	if (simcount <= 1320){  // for steps less than or equal to 1000; during this time the MNS moves forward
 		NumberOfBlocks_MovingWindow_1000 = ListOfBlocksCounted[simcount-1] - ListOfBlocksCounted[0]; // the number of blocks observed during the past 1000 steps
-		opinion_1000[simcount-1] = NumberOfBlocks_MovingWindow_1000/(1000*0.002985*1); // the opinion corresponding to the past 1000 steps
+		opinion_1000[simcount-1] = NumberOfBlocks_MovingWindow_1000/(1000*0.002985*View_width); // the opinion corresponding to the past 1000 steps
 	}
 	if (simcount <= 1520){  // for steps less than or equal to 1200; during this time the MNS moves forward 
 		NumberOfBlocks_MovingWindow_1200 = ListOfBlocksCounted[simcount-1] - ListOfBlocksCounted[0]; // the number of blocks observed during the past 1200 steps
-		opinion_1200[simcount-1] = NumberOfBlocks_MovingWindow_1200/(1200*0.002985*1); // the opinion corresponding to the past 1200 steps
+		opinion_1200[simcount-1] = NumberOfBlocks_MovingWindow_1200/(1200*0.002985*View_width); // the opinion corresponding to the past 1200 steps
 	}
 	if (simcount <= 1820){  // for steps less than or equal to 1500; during this time the MNS moves forward 
 		NumberOfBlocks_MovingWindow_1500 = ListOfBlocksCounted[simcount-1] - ListOfBlocksCounted[0]; // the number of blocks observed during the past 1500 steps
-		opinion_1500[simcount-1] = NumberOfBlocks_MovingWindow_1500/(1500*0.002985*1); // the opinion corresponding to the past 1500 steps
+		opinion_1500[simcount-1] = NumberOfBlocks_MovingWindow_1500/(1500*0.002985*View_width); // the opinion corresponding to the past 1500 steps
 	}
 
 	double OverallSum_1000 = 0; // to calculate the overall opinion (not used in this project)

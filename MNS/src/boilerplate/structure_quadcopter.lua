@@ -139,7 +139,7 @@ function detectCorner()    -- this function is used for detecting the border fro
 	for i, detectionT in ipairs(IF.getLEDsT()) do
 		-- for detecting a white LED in the specified range from the brain (brain's camera)	
 		if (vns.parentS == nil  and detectionT.color.green == 255 and detectionT.color.red == 255 and detectionT.color.blue == 255 and ((detectionT.center.x>=281 and detectionT.center.x<=308) or (detectionT.center.x>=350 and detectionT.center.x<=360)) and detectionT.center.y < 304 and detectionT.center.y > 175) then
-			if (stepCounter > 13500 and stepCounter < 37000) or stepCounter > 39000 then    -- this conditions are used for implementing the zig-zag motion of the MNS
+			if (stepCounter > 13500 and stepCounter < 20000) or (stepCounter > 26500 and stepCounter < 30000) or stepCounter > 41000 then    -- these conditions are used for implementing the zig-zag motion of the MNS
 				cornerflag = 3
 				break
 			end
@@ -344,4 +344,3 @@ function IF.setVelocity(x, y, w)
 
 	
 end
-

@@ -10,16 +10,22 @@ local tmpVector = {}    -- not used
 local prx10 = {}
 local prx4 = {}
 local counter = -1
-shiftCounter =  285    -- used to control the zig-zag motion: the MNS shifts for 285 steps each time it detects a border
+Const_shift_counter =  332    -- the number of steps spent in the shift process
+shiftCounter =  Const_shift_counter    -- used to control the zig-zag motion: the MNS shifts for Const_shift_counter steps each time it detects a border
 makeDelay = 0    -- used to control the zig-zag motion: a counter used to make and keep border detection inactive for a certain period
 l_timer = 0    -- a timer used for managing the motion of a ground robot with respect to its target point
 r_timer = 0    -- a timer used for managing the motion of a ground robot with respect to its target point
 waitActive = 0    -- used to control the zig-zag motion
 waitCounter = 0    -- used to control the zig-zag motion
-local Density = 0    -- this variable is used for detecting the border; it is set to 1 when the MNS is shifting (otherwise, it is 0)
-local file = io.open ("density_value.csv","w" )    -- the Density variable defined above is recored in this file at each step and is read by the boilerplate_loop_functions.cpp to calculate the opinions
-file:write(Density)
+Const_delay = 400    -- the number of steps used to introduce a delay for border detection or the next activation of the waitCounter; it should be set to a value bigger than Const_shift_counter
+local Border = 0    -- this variable is used for detecting the border; it is set to 1 when the MNS is shifting (otherwise, it is 0)
+flag_NewRound = 0    -- this flag is set to 1 at the step in which the MNS finishes one complete sweep of the arena
+local file = io.open ("border_value.csv","w" )    -- the Border variable defined above is recored in this file at each step and is read by the boilerplate_loop_functions.cpp to calculate the opinions
+file:write(Border)
 file:close()
+local file0 = io.open ("end_round.csv","w" )    -- a csv file to record the current value of the flag_NewRound; this file is read by the boilerplate_loop_functions.cpp to reset the LEDs at the end of a sweep round
+file0:write(flag_NewRound)
+file0:close()
 function Driver:new()
 	local instance = {}
 	setmetatable(instance, self)
@@ -39,9 +45,17 @@ function Driver:deleteParent(vns)
 end
 
 function Driver:run(vns, paraT)
-		-- at each step the following variables are set to 0 (lines 43 to 49):
+		if vns.idS == vns.brainS then  -- at the beginning of each step the brain records the current value of the flag_NewRound flag in the end_round.csv and reset the flag
+			local file0 = io.open ("end_round.csv","w" )
+			file0:write(flag_NewRound)
+			file0:close()
+
+			flag_NewRound = 0
+		end
+
+		-- at each step the following variables are set to 0 (lines 57 to 63):
 		if vns.idS == vns.brainS then
-			Density_Flag = 0    -- this flag is used by the brain dealing with Density variable used to detect the border		
+			Border_Flag = 0    -- this flag is used by the brain dealing with the Border variable used to detect the border		
 		end
 		adjust_R = 0	-- this flag is used to adjust the position of the robot with respect to its target point
 		adjust_L = 0	-- this flag is used to adjust the position of the robot with respect to its target point
@@ -75,10 +89,10 @@ function Driver:run(vns, paraT)
 					sum = sum + paraT.proxTR[i]
 				end
 			end
-			-- in lines 82 to 113 the right and left proximity sensors' data reading (proximity sensor number 10 and 4, respectively) are recorded in two separate arrays
+			-- in lines 96 to 127 the right and left proximity sensors' data reading (proximity sensor number 10 and 4, respectively) are recorded in two separate arrays
 			-- based on the data readings of the mentioned two sensors, a counter with length of 10 steps is defined: if for 10 steps, each of these two sensors does not sense any obstacle, a timer of length 10 is set
 		        -- these timers are used by the BoxAvoider module (i.e., BoxAvoider.lua): the mentiond module simulates a half-circle trajectory (from left side or right side of the obstacle) for the corresponding ground robot to pass the obtacle during this time
-			-- the priority (lines 108 to 113) is with proximity sensor 4 which leads to a half-circle trajectory from right side of the obstacle
+			-- the priority (lines 122 to 127) is with proximity sensor 4 which leads to a half-circle trajectory from right side of the obstacle
 			if paraT.proxTR[10] ~= 0 then
 				prx10[counter] = 1
 			elseif paraT.proxTR[10] == 0 then
@@ -166,7 +180,7 @@ function Driver:run(vns, paraT)
 		for _, msgM in ipairs(vns.Msg.getAM("ALLMSG", "avoid")) do
 			flagAvoid = 1
 		end
-	        -- lines 173 to 188 allows the robot to frequently adjust its y coordiate with respect to its y coordiate of the target point in the formation to stay approximately in the middle of its lane in the formation
+	        -- lines 187 to 202 allows the robot to frequently adjust its y coordiate with respect to its y coordiate of the target point in the formation to stay approximately in the middle of its lane in the formation
 	        -- the first 320 steps is used to form the MNS; The MNS starts moving at step 321 and the outputs are recorded onward
 		-- if the l_timer is 0, none of proximity sensors of the front half of the ground robot senses an obstacle, the time step is greater than 320, and adjust_L is 1, the robot gradually moves forward slightly toward its left
 		-- after one step, the l_timer is set to 7, and for the 7 following steps the robot does not perfrom this motion
@@ -188,7 +202,7 @@ function Driver:run(vns, paraT)
 					transV3 = vns.boxAvoiderSpeed.locV3
 		elseif vns.robotType == "vehicle" and sum~=0 then	-- if the robot senses an object (e.g., the other robot, an obstacle) 
 			local scalar = 1.2
-				-- as mentioned before, when a ground robot receives avoid message, it sets flagAvoid variable to 1 (see line 166)
+				-- as mentioned before, when a ground robot receives avoid message, it sets flagAvoid variable to 1 (see line 180)
 				if vns.normal == 0 and paraT.stepCounter > 320 and flagAvoid == 1 then -- the robot stops moving and just changes its direction depending on some conditions
 					if paraT.proxTR[12]~=0  then
 						vns.boxAvoiderSpeed = {
@@ -215,21 +229,21 @@ function Driver:run(vns, paraT)
 				end
 
 		end
-		-- lines 223 to 326 simulate a boustrophedon path for the MNS:
+		-- lines 237 to 346 simulate a boustrophedon path for the MNS:
 		-- the brain UAV stops for 50 steps as soon as detecting a border in its front or back (i.e., after sweeping a lane) to let the ground robots that are behind reach the group
-		-- then, the brain for 285 time steps shifts to either left or right depending on the direction of its shift movement (i.e., it shifts to left if its LeftOrRight variable is 1, and shifts to right if its LeftOrRight variable is -1)
+		-- then, the brain for Const_shift_counter time steps shifts to either left or right depending on the direction of its shift movement (i.e., it shifts to left if its LeftOrRight variable is 1, and shifts to right if its LeftOrRight variable is -1)
 		-- afterwards, the brain reverses the direction of its movement: from forward (i.e., vns.reverseMove == 0) to backward (i.e., vns.reverseMove == 1) or from backward to forward
 		-- each time the brain sweeps the entire environment, it reverses both its movement and shift direction at the end, and continues sweeping the environment
 		if vns.escape == 1 then
 			if shiftCounter>0 then
-				Density_Flag = 1
+				Border_Flag = 1
 				for _, robotVns3 in pairs(paraT.vehiclesTR) do
 					vns.Msg.send(robotVns3.idS, "normal")    -- this message is used by module (i.e., boxAvoider.lua) to let the ground robots avoid obstacles when the MNS is shifting to left or right
 				end
 				if vns.LeftOrRight == 1 then    -- shift to left
-					vns.speed(0.0, 0.0875, 0.0)
+					vns.speed(0.0, 0.075, 0.0)
 				elseif vns.LeftOrRight == -1 then    -- shift to right
-					vns.speed(0.0, -0.0875, 0.0)
+					vns.speed(0.0, -0.075, 0.0)
 				end
 				shiftCounter = shiftCounter - 1
 				if shiftCounter == 0 then
@@ -239,17 +253,20 @@ function Driver:run(vns, paraT)
 		elseif vns.idS == vns.brainS and paraT.cornerN == 3 and makeDelay == 0  then    -- detecting a white LED which is placed in a corner of the arena to make the MNS aware of reaching the corner and helps it to realize when it is done with one complete sweep of the arena
 			if waitActive == 0 then
 				waitCounter = 50    -- a counter/timer which is set to 50 and during which the brain stays stationary to let the ground robots that are behind reach the group
-				waitActive = 400    -- a counter used to make and keep border detection inactive for 200 steps (decreased by 2 at each step)
+				waitActive = Const_delay    -- a counter used to control the activation of the waitCounter (decreased by 1 at each step)
 			end
 			if waitCounter == 0 then
-				vns.termination = vns.termination + 1    -- helps the brain to realize whether it has finished one complete sweep of the arena or not; each time vns.termination % 2 becomes 0, the entire arena has been completely swept
-				makeDelay = 400
+				vns.termination = vns.termination + 1    -- helps the brain to realize whether it has finished one complete sweep of the arena or not; each time vns.termination % 2 becomes 1, the entire arena has been completely swept
+				makeDelay = Const_delay
 				file2 = io.open ("termination.csv","w" )
 				file2:write(vns.termination)
 				file2:close()
 				if (vns.termination % 2 == 0) then
-					vns.LeftOrRight = -1 *vns.LeftOrRight   -- reversing the shift direction
+					vns.LeftOrRight = -1 *vns.LeftOrRight   -- reversing the shift direction after sweeping the first lane in the new sweep round
 					vns.escape = 1
+				end
+				if (vns.termination % 2 == 1) then  -- at the end of each sweep round (i.e., one complete sweep of the arena), the flag_NewRound flag is set to 1
+					flag_NewRound = 1
 				end
 
 				if shiftCounter>0 then
@@ -262,11 +279,11 @@ function Driver:run(vns, paraT)
 						vns.reverseMove = 0   -- reversing the movement direction
 
 					end
-					shiftCounter =  285
+					shiftCounter =  Const_shift_counter
 
 					
 				end
-			elseif shiftCounter ==  285 then	-- no movement for 50 steps (as waitCounter variable is set to 50, this condition is true for 50 steps)
+			elseif shiftCounter ==  Const_shift_counter then	-- no movement for 50 steps (as waitCounter variable is set to 50, this condition is true for 50 steps)
 				vns.speed(0.0, 0.0, 0.0)    
 			end
 
@@ -274,54 +291,54 @@ function Driver:run(vns, paraT)
 
 			if waitActive == 0 then
 				waitCounter = 50
-				waitActive = 400
+				waitActive = Const_delay
 			end
 			if waitCounter == 0 then
 				if shiftCounter>0 then
-					Density_Flag = 1    -- the MNS is shifting; when this flag is 1, it means the MNS is shifting; this information is stored (Density variable) and used by the boilerplate_loop_functions.cpp to calculate the opinions
+					Border_Flag = 1    -- the MNS is shifting; when this flag is 1, it means the MNS is shifting; this information is stored (the Border variable) and used by the boilerplate_loop_functions.cpp to calculate the opinions
 					for _, robotVns3 in pairs(paraT.vehiclesTR) do
 						vns.Msg.send(robotVns3.idS, "normal")    -- this message is used by module (i.e., boxAvoider.lua) to let the ground robots avoid obstacles when the MNS is shifting to left or right
 					end
 					if vns.LeftOrRight == 1 then
-						vns.speed(0.0, 0.0875, 0.0)
+						vns.speed(0.0, 0.075, 0.0)
 					elseif vns.LeftOrRight == -1 then
-						vns.speed(0.0, -0.0875, 0.0)
+						vns.speed(0.0, -0.075, 0.0)
 					end
 					shiftCounter = shiftCounter - 1
 				else
 					
 					vns.reverseMove = 1
-					shiftCounter =  285
-					makeDelay = 400
+					shiftCounter =  Const_shift_counter
+					makeDelay = Const_delay
 					
 				end
-			elseif shiftCounter ==  285 then	-- no movement for 50 steps (as waitCounter variable is set to 50, this condition is true for 50 steps)
+			elseif shiftCounter ==  Const_shift_counter then	-- no movement for 50 steps (as waitCounter variable is set to 50, this condition is true for 50 steps)
 				vns.speed(0.0, 0.0, 0.0)
 			end
 		elseif vns.idS == vns.brainS and paraT.cornerN == 2 and makeDelay == 0 then     -- detecting a yellow LED in the back
 			if waitActive == 0 then
 				waitCounter = 50
-				waitActive = 400
+				waitActive = Const_delay
 			end
 			if waitCounter == 0 then
 				if shiftCounter>0 then
-					Density_Flag = 1    -- the MNS is shifting; when this flag is 1, it means the MNS is shifting; this information is stored (Density variable) and used by the boilerplate_loop_functions.cpp to calculate the opinions
+					Border_Flag = 1    -- the MNS is shifting; when this flag is 1, it means the MNS is shifting; this information is stored (the Border variable) and used by the boilerplate_loop_functions.cpp to calculate the opinions
 					for _, robotVns3 in pairs(paraT.vehiclesTR) do
 						vns.Msg.send(robotVns3.idS, "normal")
 					end
 					if vns.LeftOrRight == 1 then
-						vns.speed(0.0, 0.0875, 0.0)
+						vns.speed(0.0, 0.075, 0.0)
 					elseif vns.LeftOrRight == -1 then
-						vns.speed(0.0, -0.0875, 0.0)
+						vns.speed(0.0, -0.075, 0.0)
 					end
 					shiftCounter = shiftCounter - 1
 				else
 					vns.reverseMove = 0
-					shiftCounter =  285
-					makeDelay = 400
+					shiftCounter =  Const_shift_counter
+					makeDelay = Const_delay
 					
 				end
-			elseif shiftCounter ==  285 then	-- no movement for 50 steps (as waitCounter variable is set to 50, this condition is true for 50 steps)
+			elseif shiftCounter ==  Const_shift_counter then	-- no movement for 50 steps (as waitCounter variable is set to 50, this condition is true for 50 steps)
 				vns.speed(0.0, 0.0, 0.0)
 			end
 		elseif flag == 0 then    -- the following function is called by the brain in order to move forward or backward (depending on the movement direction); it is also called by non-brain UAVs and ground robots in order to move
@@ -399,7 +416,7 @@ function Driver:run(vns, paraT)
 
 		
 		-- the following "for" loop is used for robot-robot collision avoidance (while they are avoiding obstacles) which simulates a traffic rule strategy by a parent UAV
-		-- based on the rule, when two ground robots get closer than ~3.7 cm to each other (edge-to-edge distance), depending on the movement direction of the brain, if the robot that is more "behind" senses an object (e.g., the other robot, an obstacle), it stops moving temporarily (but might change its direction based on some conditions; lines 192 to 208), and the other one avoids it
+		-- based on the rule, when two ground robots get closer than ~3.7 cm to each other (edge-to-edge distance), depending on the movement direction of the brain, if the robot that is more "behind" senses an object (e.g., the other robot, an obstacle), it stops moving temporarily (but might change its direction based on some conditions; lines 206 to 222), and the other one avoids it
 		-- to this end, a "avoid" message is sent to the robot that is located behind and a "avoid2" message is sent to the other one (avoid2 is used by the boxAvoider module)
 		for _, robotVns2 in pairs(paraT.vehiclesTR) do    -- for all the ground robots that can be seen
 			if robotVns.idS ~= robotVns2.idS then  
@@ -452,16 +469,16 @@ function Driver:run(vns, paraT)
 		if vns.idS == vns.brainS then    -- the movement direction of the brain is sent to the other UAVs and ground robots; useful for the non-brain UAVs for managing the robot-robot collisions
 			vns.Msg.send(robotVns.idS, "reverseMove", vns.reverseMove)
 		end
-		if vns.idS == vns.brainS then    -- according to the  Density_Flag, the brain sets and records the Density variable in the density_value.csv which is used by the boilerplate_loop_functions.cpp to calculate the opinions 	
-			if Density_Flag == 1 then
-				Density = 1
-				local file = io.open ("density_value.csv","w" )
-				file:write(Density)
+		if vns.idS == vns.brainS then    -- according to the  Border_Flag, the brain sets and records the Border variable in the border_value.csv which is used by the boilerplate_loop_functions.cpp to calculate the opinions 	
+			if Border_Flag == 1 then
+				Border = 1
+				local file = io.open ("border_value.csv","w" )
+				file:write(Border)
 				file:close()
 			else
-				Density = 0
-				local file = io.open ("density_value.csv","w" )
-				file:write(Density)
+				Border = 0
+				local file = io.open ("border_value.csv","w" )
+				file:write(Border)
 				file:close()
 			end
 		end			
@@ -476,4 +493,3 @@ function Driver:move(transV3, rotateV3)
 end
 
 return Driver
-

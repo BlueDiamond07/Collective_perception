@@ -29,7 +29,7 @@ function BoxAvoider:run(vns, paraT)
 		vns.normal = 1
 	end
 	-- to avoid robot-robot collisions during obstacle avoidance (when the MNS is moving forward or backward) a traffic rule strategy is applied by a parent UAV
-	-- based on the rule, when two ground robots get closer than ~3.7 cm to each other (edge-to-edge distance), depending on the movement direction of the MNS, if the robot that is more "behind" senses an object (e.g., the other robot, an obstacle) it stops moving temporarily (but might change its direction based on some conditions; lines 192 to 208 of Driver.lua), and the other one avoids it
+	-- based on the rule, when two ground robots get closer than ~3.7 cm to each other (edge-to-edge distance), depending on the movement direction of the MNS, if the robot that is more "behind" senses an object (e.g., the other robot, an obstacle) it stops moving temporarily (but might change its direction based on some conditions; lines 206 to 222 of Driver.lua), and the other one avoids it
 	-- to this end, a "avoid" message is sent to the robot that is located behind (this message is used by Driver.lua) and a "avoid2" message is sent to the other one
 	-- when a ground robot receives "avoid2" message, it sets flagAvoid to 1
 	for _, msgM in ipairs(vns.Msg.getAM("ALLMSG", "avoid2")) do
@@ -178,4 +178,3 @@ end
 
 
 return BoxAvoider
-

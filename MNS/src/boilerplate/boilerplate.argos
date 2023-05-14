@@ -187,12 +187,12 @@
     </box>
 
  <!-- adding a wall and detectable tags to the eastern border to be detected by UAVs-->	  
- <box id="bn" size="0.02,5.975,0.05" movable="false" mass="10">
+ <box id="bn" size="0.02,0.1,0.04" movable="false" mass="10">
       <body position="3.2,0.0125,0"  orientation="0,0,0" />
 	  <leds medium="leds">
-		<!-- one white LED in the north-east corner to make the brain UAV aware of reaching a corner -->  
+		<!-- two white LED in the north-east corner to make the brain UAV aware of reaching a corner -->  
 		<led color="white" anchor="origin" offset="0,2.94,0.05"/>
-		<led color="yellow" anchor="origin" offset="0,2.75,0.05"/>
+		<led color="white" anchor="origin" offset="0,2.75,0.05"/>
 		<led color="yellow" anchor="origin" offset="0,2.5,0.05"/>
 		<led color="yellow" anchor="origin" offset="0,2.25,0.05"/>
 		<led color="yellow" anchor="origin" offset="0,2,0.05"/>
@@ -213,10 +213,10 @@
 		<led color="yellow" anchor="origin" offset="0,-0.5,0.05"/>
 		<led color="yellow" anchor="origin" offset="0,-0.25,0.05"/>
 		<led color="yellow" anchor="origin" offset="0,-2,0.05"/>
-		<led color="yellow" anchor="origin" offset="0,-2.75,0.05"/>
 		<led color="yellow" anchor="origin" offset="0,-2.5,0.05"/>
 		<led color="yellow" anchor="origin" offset="0,-2.25,0.05"/>
-		<!-- one white LED in the south-east corner to make the brain UAV aware of reaching a corner -->  
+		<!-- two white LED in the south-east corner to make the brain UAV aware of reaching a corner -->  
+		<led color="white" anchor="origin" offset="0,-2.75,0.05"/>
 		<led color="white" anchor="origin" offset="0,-2.98,0.05"/>
 	  </leds>
     </box>	  
@@ -228,12 +228,12 @@
 	  </leds>
     </box>
     <!-- adding a wall and detectable tags to the western border to be detected by UAVs-->	  
-    <box id="bs" size="0.02,5.975,0.05" movable="false" mass="10">
+    <box id="bs" size="0.02,0.1,0.04" movable="false" mass="10">
       <body position="-3.2,-0.0125,0"  orientation="0,0,0" />
 	  <leds medium="leds">
-		<!-- one white LED in the south-west corner to make the brain UAV aware of reaching a corner -->  
+		<!-- two white LED in the south-west corner to make the brain UAV aware of reaching a corner -->  
 		<led color="white" anchor="origin" offset="0,-2.93,0.05"/>
-		<led color="yellow" anchor="origin" offset="0,-2.75,0.05"/>
+		<led color="white" anchor="origin" offset="0,-2.75,0.05"/>
 		<led color="yellow" anchor="origin" offset="0,-2.5,0.05"/>
 		<led color="yellow" anchor="origin" offset="0,-2.25,0.05"/>
 		<led color="yellow" anchor="origin" offset="0,-2,0.05"/>
@@ -254,10 +254,10 @@
 		<led color="yellow" anchor="origin" offset="0,0.5,0.05"/>
 		<led color="yellow" anchor="origin" offset="0,0.25,0.05"/>
 		<led color="yellow" anchor="origin" offset="0,2,0.05"/>
-		<led color="yellow" anchor="origin" offset="0,2.75,0.05"/>
 		<led color="yellow" anchor="origin" offset="0,2.5,0.05"/>
 		<led color="yellow" anchor="origin" offset="0,2.25,0.05"/>
-		<!-- one white LED in the north-west corner to make the brain UAV aware of reaching a corner -->  
+		<!-- two white LED in the north-west corner to make the brain UAV aware of reaching a corner --> 
+		<led color="white" anchor="origin" offset="0,2.75,0.05"/>
 		<led color="white" anchor="origin" offset="0,2.97,0.05"/>
 	  </leds>
     </box>	  

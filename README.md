@@ -56,7 +56,7 @@ All `.csv` are tab delimited. The columns of each `.csv` are as follows:
 
 - *(not used in the paper)* estimate at the current time step **(one column per robot)**
 - opinion at the current time step, $\lambda^{\text{app}}$ **(one column per robot)**
-- mean of the row of entries from the 2nd group of columns, $\overline{\lambda^{\text{app}}}$ (i.e., opinions of all robots at the current time step)
+- *(not used in the paper)* mean of the opinions of all robots at the current time step (calculated as the mean of the row of entries from the 2nd group of columns)
 - time step
 
 ### MEAN and VOTE approaches
@@ -70,8 +70,8 @@ All `.csv` are tab delimited. The columns of each `.csv` are as follows:
 
 In the output file of (only) the robot with the highest ID, there are additional columns:
 
-- mean of all previous values of column 3 from all `.csv` from this experiment, $\overline{\lambda^{\text{app}}}$, (i.e., opinions of all robots from every time step, using the MEAN approach)
-- mean of all previous values of column 4 from all `.csv` from this experiment, $\overline{\lambda^{\text{app}}}$, (i.e., opinions of all robots from every time step, using the VOTE approach)
+- *(not used in the paper)* mean of the opinions of all robots from every time step, using the MEAN approach (calculated as the mean of all previous values of column 3 from all `.csv` from this experiment)
+- *(not used in the paper)* mean of the opinions of all robots from every time step, using the VOTE approach (calculated as the mean of all previous values of column 4 from all `.csv` from this experiment)
 - *(not used in the paper)* mean of all previous values of column 5 from all `.csv` from this experiment
 - *(not used in the paper)* mean of all previous values of column 6 from all `.csv` from this experiment
 
